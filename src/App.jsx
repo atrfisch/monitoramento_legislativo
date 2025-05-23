@@ -144,7 +144,7 @@ function App() {
       }))
     );
     const sortedMovements = allMovements.sort((a, b) => new Date(b.data) - new Date(a.data));
-    setLatestMovements(sortedMovements);
+    setLatestMovements(sortedMovements.slice(0, 10)); // Limit to the last 10 movements
 
     // 2) Lista de proposições com mais alterações da que teve mais alterações para a menos
     const propositionsWithChangeCount = selectedPropositions.map(prop => ({
@@ -440,3 +440,4 @@ function App() {
 }
 
 export default App;
+
