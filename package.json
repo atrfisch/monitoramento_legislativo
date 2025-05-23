@@ -1,0 +1,17 @@
+{
+  "name": "monitoramento-legislativo",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://SEU_USUARIO.github.io/NOME_REPO",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.7.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "build": "react-scripts build"
+  }
+}
