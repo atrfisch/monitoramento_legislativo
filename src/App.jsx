@@ -21,7 +21,7 @@ function App() {
     const day = date.getDay(); // 0 for Sunday, 1 for Monday, etc.
     const diff = date.getDate() - day; // Adjust to Sunday
     const sunday = new Date(date.setDate(diff));
-    return sunday.toISOString().split('T')[0]; // Return in YYYY-MM-DD format
+    return sunday.toISOString().split('T')[0]; // Return in ISO YYYY-MM-DD format
   };
 
   // Function to parse proposition code (e.g., "PL 123/2023")
@@ -293,24 +293,39 @@ function App() {
           body {
             font-family: 'Inter', sans-serif;
           }
+
+          /* Basic Spinner CSS for loading state */
+          .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #2563eb; /* Tailwind blue-600 */
+            animation: spin 1s ease infinite;
+          }
+
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
         `}
       </style>
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl mb-8">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-6xl mb-8 hover:shadow-xl hover:scale-[1.005] transition-all duration-300"> {/* Added hover effects */}
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Monitoramento Legislativo</h1>
 
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:space-x-4"> {/* Adjusted for horizontal layout */}
-          <div className="flex-grow mb-4 sm:mb-0"> {/* Flex-grow to make textarea take available space */}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:space-x-4">
+          <div className="flex-grow mb-4 sm:mb-0">
             <label htmlFor="proposition-codes" className="block text-gray-700 text-sm font-medium mb-2">
               Códigos das Proposições (separados por vírgula):
             </label>
-            <textarea
+            <input
               id="proposition-codes"
-              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
-              rows="4"
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out h-12"
               value={propositionCodesInput}
               onChange={(e) => setPropositionCodesInput(e.target.value)}
               placeholder="Ex: PL 123/2023, PEC 45/2022, MP 789/2024"
-            ></textarea>
+            />
             {errorMessage && (
               <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
             )}
@@ -326,14 +341,17 @@ function App() {
       </div>
 
       {isLoading && (
-        <div className="text-center text-gray-700 text-lg mt-4">Carregando dados...</div>
+        <div className="text-center text-gray-700 text-lg mt-4 flex flex-col items-center justify-center">
+            <div className="spinner mb-2"></div> {/* Loading spinner */}
+            <div>Carregando dados...</div>
+        </div>
       )}
 
       {!isLoading && selectedPropositions.length > 0 && (
         <>
           {/* Nova Seção: Quantidade de Movimentação por Semana (Gráfico de Linha) */}
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Quantidade de Movimentação por Semana</h2>
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-6xl mb-8 hover:shadow-xl hover:scale-[1.005] transition-all duration-300"> {/* Added hover effects */}
+            <h2 className="text-xl font-semibold text-gray-800 pb-2 mb-4 border-b border-gray-200">Quantidade de Movimentação por Semana</h2> {/* Added border-b */}
             {weeklyMovementData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart
@@ -344,7 +362,7 @@ function App() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{ textAlign: 'center' }} />
                   {selectedPropositions.map((prop) => (
                     <Line
                       key={prop.codigo}
@@ -362,14 +380,14 @@ function App() {
             )}
           </div>
 
-          <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Últimos Andamentos */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Últimos Andamentos</h2>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.005] transition-all duration-300"> {/* Added hover effects */}
+              <h2 className="text-xl font-semibold text-gray-800 pb-2 mb-4 border-b border-gray-200">Últimos Andamentos</h2> {/* Added border-b */}
               {latestMovements.length > 0 ? (
                 <ul className="space-y-3">
                   {latestMovements.map((mov, index) => (
-                    <li key={index} className="border-b border-gray-200 pb-3 last:border-b-0">
+                    <li key={index} className="border-b border-gray-100 pb-3 last:border-b-0">
                       <p className="text-sm text-gray-600">
                         <span className="font-medium">{mov.data}</span> - <span className="font-semibold">{mov.codigo}</span>: {mov.descricao}
                       </p>
@@ -382,12 +400,12 @@ function App() {
             </div>
 
             {/* Proposições com Mais Alterações */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Proposições com Mais Alterações</h2>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.005] transition-all duration-300"> {/* Added hover effects */}
+              <h2 className="text-xl font-semibold text-gray-800 pb-2 mb-4 border-b border-gray-200">Proposições com Mais Alterações</h2> {/* Added border-b */}
               {propositionsByChanges.length > 0 ? (
                 <ul className="space-y-3">
                   {propositionsByChanges.map((prop, index) => (
-                    <li key={index} className="border-b border-gray-200 pb-3 last:border-b-0">
+                    <li key={index} className="border-b border-gray-100 pb-3 last:border-b-0">
                       <p className="text-sm text-gray-600">
                         <span className="font-medium">{prop.numChanges} alterações</span> - <span className="font-semibold">{prop.codigo}</span>: {prop.titulo}
                       </p>
@@ -400,12 +418,12 @@ function App() {
             </div>
 
             {/* Status Atual */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Status Atual</h2>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.005] transition-all duration-300"> {/* Added hover effects */}
+              <h2 className="text-xl font-semibold text-gray-800 pb-2 mb-4 border-b border-gray-200">Status Atual</h2> {/* Added border-b */}
               {currentStatusData.length > 0 ? (
                 <ul className="space-y-4">
                   {currentStatusData.map((prop, index) => (
-                    <li key={index} className="border-b border-gray-200 pb-4 last:border-b-0">
+                    <li key={index} className="border-b border-gray-100 pb-4 last:border-b-0">
                       <p className="text-base font-semibold text-gray-700 mb-1">
                         {prop.codigo}: {prop.titulo}
                       </p>
