@@ -298,24 +298,26 @@ function App() {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Monitoramento Legislativo</h1>
 
-        <div className="mb-6">
-          <label htmlFor="proposition-codes" className="block text-gray-700 text-sm font-medium mb-2">
-            Códigos das Proposições (separados por vírgula):
-          </label>
-          <textarea
-            id="proposition-codes"
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
-            rows="4"
-            value={propositionCodesInput}
-            onChange={(e) => setPropositionCodesInput(e.target.value)}
-            placeholder="Ex: PL 123/2023, PEC 45/2022, MP 789/2024"
-          ></textarea>
-          {errorMessage && (
-            <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-          )}
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:space-x-4"> {/* Adjusted for horizontal layout */}
+          <div className="flex-grow mb-4 sm:mb-0"> {/* Flex-grow to make textarea take available space */}
+            <label htmlFor="proposition-codes" className="block text-gray-700 text-sm font-medium mb-2">
+              Códigos das Proposições (separados por vírgula):
+            </label>
+            <textarea
+              id="proposition-codes"
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+              rows="4"
+              value={propositionCodesInput}
+              onChange={(e) => setPropositionCodesInput(e.target.value)}
+              placeholder="Ex: PL 123/2023, PEC 45/2022, MP 789/2024"
+            ></textarea>
+            {errorMessage && (
+              <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+            )}
+          </div>
           <button
             onClick={handleProcessPropositions}
-            className="mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-md hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out shadow-md"
+            className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-md hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200 ease-in-out shadow-md"
             disabled={isLoading}
           >
             {isLoading ? 'Processando...' : 'Processar Proposições'}
